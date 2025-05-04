@@ -1,7 +1,7 @@
-# Baseline Classifier — Human-or-Not Hackathon
+# Baseline Classifier
 
 > **TL;DR** A minimal FastAPI service that receives chat messages, stores them in Postgres and replies with a **random** probability that a bot is present in the dialog.  
-> Use it as a starting point for the **Human-or-Not Winter Bootcamp**—replace the random predictor with your own model and climb the leaderboard!
+> Use it as a starting point for the **You are Bot**—replace the random predictor with your own model and climb the leaderboard!
 
 ---
 
