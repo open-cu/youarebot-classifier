@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: student_postgres_2
+    environment:
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: student_pass
+      POSTGRES_DB: chat_db
+    volumes:
+      - postgres_data_2:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - student_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U student -d chat_db || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  inference-service:
+    build: .
+    container_name: inference_service
+    environment:
+      DB_USER: "student"
+      DB_PASSWORD: "student_pass"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_NAME: "chat_db"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "443:8000"
+    networks:
+      - student_net
+
+volumes:
+  postgres_data_2:
+
+networks:
+  student_net:
+    driver: bridge
