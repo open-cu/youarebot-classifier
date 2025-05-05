@@ -151,6 +151,7 @@ For the detailed step-by-step guide see the zoomcamp portal.
 	•	👤 github.com/aguschin
 	•	👤 github.com/semchinov
 	•	👤 github.com/Funnycats14
+	•	👤 github.com/Mirckos
 
 
 Happy hacking & good luck on the leaderboard! 🎉
