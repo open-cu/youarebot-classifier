@@ -1,4 +1,4 @@
-from pydantic import BaseModel, UUID4, StrictStr
+from pydantic import BaseModel, Field, StrictStr, UUID4
 
 
 class IncomingMessage(BaseModel):
@@ -25,4 +25,4 @@ class Prediction(BaseModel):
     message_id: UUID4
     dialog_id: UUID4
     participant_index: int
-    is_bot_probability: float
+    is_bot_probability: float = Field(ge=0.0, le=1.0, allow_inf_nan=False)

@@ -1,6 +1,7 @@
+from typing import List, Dict
+
 import psycopg2
 from psycopg2.extensions import connection as _connection
-from typing import List, Dict
 
 from .config import DB_URL
 
@@ -16,7 +17,8 @@ def init_db() -> None:
     conn = get_db_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("""
+            cur.execute(
+                """
                 CREATE TABLE IF NOT EXISTS messages (
                     id UUID PRIMARY KEY,
                     text TEXT NOT NULL,
@@ -24,17 +26,18 @@ def init_db() -> None:
                     participant_index INT NOT NULL,
                     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
-            """)
+                """
+            )
         conn.commit()
     finally:
         conn.close()
 
 
 def insert_message(
-        id,  # UUID
-        text: str,
-        dialog_id,  # UUID
-        participant_index: int
+    id,  # UUID
+    text: str,
+    dialog_id,  # UUID
+    participant_index: int,
 ) -> None:
     """
     stores one message in db
@@ -45,9 +48,13 @@ def insert_message(
             cur.execute(
                 """
                 INSERT INTO messages (id, text, dialog_id, participant_index)
-                VALUES (%s, %s, %s, %s);
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (id) DO UPDATE
+                SET text = EXCLUDED.text,
+                    dialog_id = EXCLUDED.dialog_id,
+                    participant_index = EXCLUDED.participant_index;
                 """,
-                (str(id), text, str(dialog_id), participant_index)
+                (str(id), text, str(dialog_id), participant_index),
             )
         conn.commit()
     finally:
@@ -68,7 +75,7 @@ def select_messages_by_dialog(dialog_id) -> List[Dict[str, str]]:
                 WHERE dialog_id = %s
                 ORDER BY created_at ASC;
                 """,
-                (str(dialog_id),)
+                (str(dialog_id),),
             )
             rows = cur.fetchall()
         return [

@@ -1,13 +1,12 @@
 services:
   postgres:
-    image: postgres:latest
-    container_name: student_postgres_2
+    image: postgres:16-alpine
     environment:
       POSTGRES_USER: student
       POSTGRES_PASSWORD: student_pass
       POSTGRES_DB: chat_db
     volumes:
-      - postgres_data_2:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -21,13 +20,13 @@ services:
 
   inference-service:
     build: .
-    container_name: inference_service
     environment:
-      DB_USER: "student"
-      DB_PASSWORD: "student_pass"
-      DB_HOST: "postgres"
+      DB_USER: student
+      DB_PASSWORD: student_pass
+      DB_HOST: postgres
       DB_PORT: "5432"
-      DB_NAME: "chat_db"
+      DB_NAME: chat_db
+      MODEL_NAME: typeform/distilbert-base-uncased-mnli
     depends_on:
       postgres:
         condition: service_healthy
@@ -37,7 +36,7 @@ services:
       - student_net
 
 volumes:
-  postgres_data_2:
+  postgres_data:
 
 networks:
   student_net:

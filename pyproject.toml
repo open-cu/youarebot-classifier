@@ -1,0 +1,36 @@
+[project]
+name = "youarebot-classifier"
+version = "0.1.0"
+description = "FastAPI classifier service for the youare.bot platform contract."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.0,<1.0.0",
+    "psycopg2-binary>=2.9.10,<3.0.0",
+    "pydantic>=2.10.0,<3.0.0",
+    "sentencepiece>=0.2.0,<1.0.0",
+    "torch>=2.6.0,<3.0.0",
+    "transformers>=4.49.0,<5.0.0",
+    "uvicorn[standard]>=0.34.0,<1.0.0",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.0,<9.0.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cpu", marker = "platform_system == 'Linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
